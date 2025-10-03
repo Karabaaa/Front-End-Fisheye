@@ -34,7 +34,7 @@ function photographHeader(data) {
 
   function getHeaderDOM() {
     const photographHeader = document.querySelector(".photograph-header");
-    const button = document.querySelector(".contact_button");
+    const button = document.querySelector("main .contact_button");
     const text = document.createElement("div");
     text.classList.add("textContent");
 
@@ -57,27 +57,97 @@ function photographHeader(data) {
 }
 
 function mediaTemplate(media, folder) {
-  const { title, image, likes } = media;
+  const { id, title, image, video, likes } = media;
 
-  const picture = `./assets/photos/${folder}/${image}`;
+  const picture = `./assets/photos/${folder}/${image ?? video}`;
+  const mediaKey = `likes:${id}`;
 
-  function getMediaDOM() {
-    const photographMedia = document.createElement("div");
-    photographMedia.classList.add("photograph-media");
+  const loadLikeState = (key) => {
+    return JSON.parse(localStorage.getItem(key)) || null;
+  };
+  const saveLikeState = (key, data) => {
+    localStorage.setItem(key, JSON.stringify(data));
+  };
+
+  const saved = loadLikeState(mediaKey);
+  let liked = saved?.liked ?? false;
+  let likeCount = saved?.count ?? Number(likes || 0);
+
+  const wrapper = document.createElement("article");
+  wrapper.className = "photograph-media";
+
+  let mediaElement;
+
+  if (image) {
     const img = document.createElement("img");
     img.setAttribute("src", picture);
-    const mediaTitle = document.createElement("h3");
-    mediaTitle.textContent = title;
-    const like = document.createElement("p");
-    like.textContent = likes;
-    const textContainer = document.createElement("div");
-    textContainer.classList.add("media-content");
-    textContainer.append(mediaTitle, like);
-    photographMedia.append(img, textContainer);
-
-    return photographMedia;
+    img.setAttribute("alt", title ?? "Image");
+    mediaElement = img;
+  } else if (video) {
+    const vid = document.createElement("video");
+    const src = document.createElement("source");
+    src.setAttribute("src", picture);
+    vid.setAttribute("aria-label", `${title ?? "Vidéo"}`);
+    vid.setAttribute("type", "video/mp4");
+    vid.controls = true;
+    vid.appendChild(src);
+    mediaElement = vid;
   }
-  return { getMediaDOM };
+
+  mediaElement.classList.add("media");
+  mediaElement.tabIndex = 0;
+  mediaElement.addEventListener("click", (e) => {
+    displayLightbox(mediaElement);
+
+    const card = e.currentTarget.closest(".photograph-media");
+    const index = Number(card.dataset.index);
+    openLightboxAt(index);
+  });
+
+  const mediaTitle = document.createElement("h3");
+  mediaTitle.textContent = title;
+
+  const like = document.createElement("span");
+  like.textContent = String(likeCount);
+
+  const textContainer = document.createElement("div");
+  textContainer.classList.add("media-content");
+
+  const likesContainer = document.createElement("div");
+  likesContainer.classList.add("likes-container");
+
+  const heartButton = document.createElement("button");
+  heartButton.classList.add("heart-button");
+  heartButton.type = "button";
+  heartButton.setAttribute(
+    "aria-label",
+    liked ? "Retirer le like" : "Ajouter un like"
+  );
+  heartButton.setAttribute("aria-pressed", String(liked));
+
+  const heart = document.createElement("img");
+  heart.setAttribute("src", "./assets/icons/heart.svg");
+  heart.alt = "like";
+  heart.classList.add("heart");
+  heartButton.appendChild(heart);
+  heartButton.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    liked = !liked;
+    likeCount += liked ? 1 : -1;
+    like.textContent = String(likeCount);
+    saveLikeState(mediaKey, { liked, count: likeCount });
+    document.dispatchEvent(
+      new CustomEvent("likechange", {
+        detail: { mediaId: id },
+      })
+    );
+  });
+  likesContainer.append(like, heartButton);
+  textContainer.append(mediaTitle, likesContainer);
+  wrapper.append(mediaElement, textContainer);
+
+  return wrapper;
 }
 
 function getFolderName(photographerId) {
