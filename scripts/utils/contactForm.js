@@ -1,11 +1,40 @@
+let modalOpen = false;
+
 function displayModal() {
   const modal = document.getElementById("contact_modal");
   modal.style.display = "flex";
+  modal.setAttribute("aria-hidden", "false");
+  document.addEventListener("keydown", onModalKeyDown);
+  const form = document.getElementById("contact-form");
+  if (form) form.addEventListener("keydown", onValidateFormEnterKey);
+  modalOpen = true;
 }
 
 function closeModal() {
   const modal = document.getElementById("contact_modal");
+  const opener = document.getElementById("open-contact") || document.body;
+  const form = document.getElementById("contact-form");
+  if (form) form.removeEventListener("keydown", onValidateFormEnterKey);
+  opener.focus();
   modal.style.display = "none";
+  modal.setAttribute("aria-hidden", "true");
+  document.removeEventListener("keydown", onModalKeyDown);
+  modalOpen = false;
+}
+
+function onModalKeyDown(e) {
+  if (!modalOpen) return;
+  if (e.key === "Escape") {
+    e.preventDefault();
+    closeModal();
+  }
+}
+
+function onValidateFormEnterKey(e) {
+  if (e.key !== "Enter" || e.shiftKey) return;
+  e.preventDefault();
+  const form = document.getElementById("contact-form");
+  if (form) form.requestSubmit();
 }
 
 function submitForm(event) {

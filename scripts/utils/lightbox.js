@@ -1,13 +1,37 @@
+let lightboxOpen = false;
+
 function displayLightbox() {
   const lightbox = document.getElementById("lightbox");
   lightbox.style.display = "flex";
   lightbox.setAttribute("aria-hidden", "false");
+  document.addEventListener("keydown", onLightboxKeyDown);
+  lightboxOpen = true;
 }
 
 function closeLightbox() {
   const lightbox = document.getElementById("lightbox");
   lightbox.style.display = "none";
   lightbox.setAttribute("aria-hidden", "true");
+  document.removeEventListener("keydown", onLightboxKeyDown);
+  lightboxOpen = false;
+}
+
+function onLightboxKeyDown(e) {
+  if (!lightboxOpen) return;
+  switch (e.key) {
+    case "Escape":
+      e.preventDefault();
+      closeLightbox();
+      break;
+    case "ArrowLeft":
+      e.preventDefault();
+      previous();
+      break;
+    case "ArrowRight":
+      e.preventDefault();
+      next();
+      break;
+  }
 }
 
 let gallery = [];
@@ -22,6 +46,7 @@ function buildGallery(medias, folder) {
         ? `./assets/photos/${folder}/${m.image}`
         : `./assets/photos/${folder}/${m.video}`,
       title: m.title || "",
+      alt: m.title,
     };
   });
 }

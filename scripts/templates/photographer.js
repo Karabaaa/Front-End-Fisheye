@@ -7,6 +7,7 @@ function photographerTemplate(data) {
     const article = document.createElement("article");
     const img = document.createElement("img");
     img.setAttribute("src", picture);
+    img.setAttribute("alt", name);
     const h2 = document.createElement("h2");
     const location = document.createElement("h3");
     const tag = document.createElement("p");
@@ -29,6 +30,11 @@ function photographerTemplate(data) {
 
 function photographHeader(data) {
   const { name, city, country, tagline, price, portrait, id } = data;
+  const modalTitles = document.querySelector(".titles");
+  const photographer = document.createElement("h2");
+  photographer.classList.add("photographer-name");
+  photographer.textContent = name;
+  modalTitles.appendChild(photographer);
 
   const picture = `./assets/photos/photographers/${portrait}`;
 
@@ -40,6 +46,7 @@ function photographHeader(data) {
 
     const img = document.createElement("img");
     img.setAttribute("src", picture);
+    img.setAttribute("alt", name);
     const h2 = document.createElement("h2");
     const location = document.createElement("h3");
     const tag = document.createElement("p");
@@ -61,7 +68,7 @@ function mediaTemplate(media, folder) {
 
   const picture = `./assets/photos/${folder}/${image ?? video}`;
   const mediaKey = `likes:${id}`;
-
+  const isImage = !!image;
   const loadLikeState = (key) => {
     return JSON.parse(localStorage.getItem(key)) || null;
   };
@@ -75,6 +82,14 @@ function mediaTemplate(media, folder) {
 
   const wrapper = document.createElement("article");
   wrapper.className = "photograph-media";
+
+  const link = document.createElement("a");
+  link.href = picture;
+  link.className = "media-link";
+  link.setAttribute(
+    "aria-label",
+    `${title || (isImage ? "Image" : "Vidéo")}, closeup view`
+  );
 
   let mediaElement;
 
@@ -93,15 +108,22 @@ function mediaTemplate(media, folder) {
     vid.appendChild(src);
     mediaElement = vid;
   }
+  link.appendChild(mediaElement);
 
   mediaElement.classList.add("media");
   mediaElement.tabIndex = 0;
-  mediaElement.addEventListener("click", (e) => {
-    displayLightbox(mediaElement);
-
+  link.addEventListener("click", (e) => {
+    e.preventDefault();
     const card = e.currentTarget.closest(".photograph-media");
     const index = Number(card.dataset.index);
     openLightboxAt(index);
+  });
+
+  link.addEventListener("keydown", (e) => {
+    if (e.code === "Space" || e.key === " ") {
+      e.preventDefault();
+      link.click();
+    }
   });
 
   const mediaTitle = document.createElement("h3");
@@ -127,7 +149,7 @@ function mediaTemplate(media, folder) {
 
   const heart = document.createElement("img");
   heart.setAttribute("src", "./assets/icons/heart.svg");
-  heart.alt = "like";
+  heart.alt = "likes";
   heart.classList.add("heart");
   heartButton.appendChild(heart);
   heartButton.addEventListener("click", (e) => {
@@ -145,7 +167,7 @@ function mediaTemplate(media, folder) {
   });
   likesContainer.append(like, heartButton);
   textContainer.append(mediaTitle, likesContainer);
-  wrapper.append(mediaElement, textContainer);
+  wrapper.append(link, textContainer);
 
   return wrapper;
 }

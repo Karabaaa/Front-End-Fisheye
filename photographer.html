@@ -13,19 +13,33 @@
   <body>
     <header>
       <a href="index.html" aria-label="fisheye home page">
-        <img src="assets/images/logo.png" class="logo" />
+        <img src="assets/images/logo.png" class="logo" alt="Fisheye" />
       </a>
     </header>
     <main id="main">
       <div class="photograph-header">
-        <button class="contact_button" onclick="displayModal()">
+        <button
+          id="open-contact"
+          class="contact_button"
+          onclick="displayModal()"
+          aria-haspopup="dialog"
+          a
+        >
           Contactez-moi
         </button>
       </div>
       <div class="sort-bar">
         <span id="sort-label">Trier par</span>
         <div class="dropdown" aria-labelledby="sort-label">
-          <button class="dropdown__btn" type="button">Popularité</button>
+          <button
+            class="dropdown__btn"
+            type="button"
+            aria-haspopup="listbox"
+            aria-expanded="false"
+            aria-controls="sort-menu"
+          >
+            Popularité
+          </button>
           <div
             class="dropdown__menu"
             role="listbox"
@@ -35,15 +49,26 @@
               class="dropdown__item"
               role="option"
               data-value="popularity"
+              aria-selected="true"
             >
               Popularité
             </button>
             <div class="dropdown__sep" aria-hidden="true"></div>
-            <button class="dropdown__item" role="option" data-value="date">
+            <button
+              class="dropdown__item"
+              role="option"
+              data-value="date"
+              aria-selected="true"
+            >
               Date
             </button>
             <div class="dropdown__sep" aria-hidden="true"></div>
-            <button class="dropdown__item" role="option" data-value="title">
+            <button
+              class="dropdown__item"
+              role="option"
+              data-value="title"
+              aria-selected="true"
+            >
               Titre
             </button>
           </div>
@@ -56,15 +81,26 @@
         </div>
       </div>
     </main>
-    <div id="contact_modal">
+    <div
+      id="contact_modal"
+      class="modal-root"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="contact-title"
+    >
       <div class="modal">
-        <header>
-          <h2>Contactez-moi</h2>
-          <img
-            src="assets/icons/close.svg"
-            alt="Fermer"
+        <header id="modal-header">
+          <div class="titles">
+            <h2 id="contact-title">Contactez-moi</h2>
+          </div>
+          <button
+            class="modal-close"
+            type="button"
+            aria-label="Fermer la modale"
             onclick="closeModal()"
-          />
+          >
+            <img src="assets/icons/close.svg" alt="Fermer" aria-hidden="true" />
+          </button>
         </header>
         <form id="contact-form" onsubmit="submitForm(event)">
           <div>
@@ -88,11 +124,11 @@
       </div>
     </div>
     <div id="lightbox" role="dialog" aria-modal="true" aria-label="Gallerie">
-      <div class="lightbox-modal">
+      <div class="lightbox-modal" aria-label="image closeup view">
         <div class="left-side">
           <button
             class="lb-btn lb-prev"
-            aria-label="Précédent"
+            aria-label="Previous image"
             onclick="previous()"
           >
             <img src="assets/icons/left-arrow.svg" alt="Précédent" />
@@ -102,12 +138,16 @@
         <div class="right-side">
           <button
             class="lb-btn lb-close"
-            aria-label="Fermer"
+            aria-label="Close dialog"
             onclick="closeLightbox()"
           >
             <img src="assets/icons/close-red.svg" alt="fermer" />
           </button>
-          <button class="lb-btn lb-next" aria-label="Suivant" onclick="next()">
+          <button
+            class="lb-btn lb-next"
+            aria-label="Next image"
+            onclick="next()"
+          >
             <img src="assets/icons/right-arrow.svg" alt="Suivant" />
           </button>
         </div>

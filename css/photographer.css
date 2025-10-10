@@ -13,7 +13,7 @@
 }
 
 #contact_modal {
-    background: rgba(0,0,0,.3);
+    background:rgba(196, 196, 196, 0.4)
 }
 
 .lightbox-modal {
@@ -53,28 +53,70 @@
 .modal {
     border-radius: 5px;
     background-color: #DB8876;
-    width: 50%;
+    width: 669px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    padding: 35px;
+    padding: 20px 35px;
     margin: auto;
+    height:900px;
+    box-sizing: border-box;
 }
 
 .modal header {
+    display: flex;
     justify-content: space-between;
+    align-items: flex-start;   
     width: 100%;
 }
 
-.modal header img {
-    cursor: pointer;
+.modal header .titles {
+  display: flex;
+  flex-direction: column;
+  gap: 0; 
+  width:100%;
 }
 
-.modal header h2 {
+.modal label {
+    font-size: 36px;
+    line-height: 100%;
+}
+#first, #last, #email {
+    height: 68px;
+}
+
+.modal-close {
+  background: none;
+  border: 0;
+  padding: 0px;
+  margin-top:-5px;
+  margin-right:-15px;
+  line-height: 0;      
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  height: 72px;
+  width: 72px;
+  z-index:2;
+}
+
+.modal h2 {
     font-size: 64px;
+    text-align: left;
     font-weight: normal;
-    text-align: center;
+    line-height: 100%;
+    text-align: left;
+    overflow-wrap: anywhere;  
+    hyphens: auto;  
+    display:block;
+    white-space: pre-line; 
+    margin:0;
+}
+
+.modal #message {
+    height:170px;
 }
 
 form {
@@ -360,7 +402,7 @@ form input {
   flex: 0 0 16px;
   background: no-repeat center/16px 10px url("../assets/icons/down-arrow.svg");
   transition: transform .15s ease;
-  z-index: 12;
+  z-index: 6;
 }
 .dropdown.is-open .dropdown__btn::after {
   background-image: url("../assets/icons/up-arrow.svg");
@@ -370,7 +412,7 @@ form input {
   position: absolute;
   top: 0;          
   left: 0;
-  z-index: 10;
+  z-index: 5;
   box-sizing: border-box;
   width: 100%;
   height: 170px;
