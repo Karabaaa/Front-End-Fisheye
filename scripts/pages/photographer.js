@@ -136,38 +136,130 @@ function setupCustomSortDropdown() {
   const btn = dropdown.querySelector(".dropdown__btn");
   const menu = dropdown.querySelector(".dropdown__menu");
   const hidden = dropdown.querySelector("#sort-select");
+  const items = dropdown.querySelectorAll(".dropdown__item");
+
+  let currentIndex = -1; // Index de l'option actuellement focusée
 
   // Ouverture / fermeture
-  const open = () => dropdown.classList.add("is-open");
-  const close = () => dropdown.classList.remove("is-open");
+  const open = () => {
+    dropdown.classList.add("is-open");
+    btn.setAttribute("aria-expanded", "true");
+    currentIndex = -1;
+    // Focus sur la première option
+    if (items.length > 0) {
+      currentIndex = 0;
+      items[currentIndex].focus();
+    }
+  };
 
+  const close = () => {
+    dropdown.classList.remove("is-open");
+    btn.setAttribute("aria-expanded", "false");
+    currentIndex = -1;
+  };
+
+  // Navigation avec les flèches
+  const navigateItems = (direction) => {
+    if (items.length === 0) return;
+
+    if (direction === "down") {
+      currentIndex = Math.min(currentIndex + 1, items.length - 1);
+    } else if (direction === "up") {
+      currentIndex = Math.max(currentIndex - 1, 0);
+    }
+
+    items[currentIndex].focus();
+  };
+
+  // Sélection d'une option
+  const selectItem = (item) => {
+    const label = item.textContent.trim();
+    const value = item.dataset.value;
+    btn.textContent = label;
+    hidden.value = value;
+    hidden.dispatchEvent(new Event("change", { bubbles: true }));
+
+    // Mettre à jour aria-selected
+    items.forEach((i) => i.setAttribute("aria-selected", "false"));
+    item.setAttribute("aria-selected", "true");
+
+    close();
+    btn.focus();
+  };
+
+  // Events souris (existants)
   btn.addEventListener("click", () => {
     const isOpen = dropdown.classList.contains("is-open");
     isOpen ? close() : open();
   });
+
   document.addEventListener("click", (e) => {
     if (!dropdown.contains(e.target)) close();
   });
+
+  // Events clavier sur le bouton
   btn.addEventListener("keydown", (e) => {
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      open();
-      menu.querySelector(".dropdown__item")?.focus();
+    switch (e.key) {
+      case "Enter":
+      case " ": // Espace
+        e.preventDefault();
+        const isOpen = dropdown.classList.contains("is-open");
+        isOpen ? close() : open();
+        break;
+      case "ArrowDown":
+        e.preventDefault();
+        if (!dropdown.classList.contains("is-open")) {
+          open();
+        } else {
+          navigateItems("down");
+        }
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        if (!dropdown.classList.contains("is-open")) {
+          open();
+        } else {
+          navigateItems("up");
+        }
+        break;
+      case "Escape":
+        e.preventDefault();
+        close();
+        break;
     }
   });
 
-  // Sélection d’une option
-  dropdown.querySelectorAll(".dropdown__item").forEach((item) => {
-    item.addEventListener("click", () => {
-      const label = item.textContent.trim();
-      const value = item.dataset.value;
-      btn.textContent = label; // ← libellé maj
-      hidden.value = value; // ← “valeur du select”
-      hidden.dispatchEvent(new Event("change", { bubbles: true }));
-
-      close(); // ← ferme le menu
-      btn.focus();
+  // Events clavier sur les options
+  items.forEach((item, index) => {
+    item.addEventListener("keydown", (e) => {
+      switch (e.key) {
+        case "Enter":
+        case " ": // Espace
+          e.preventDefault();
+          selectItem(item);
+          break;
+        case "ArrowDown":
+          e.preventDefault();
+          navigateItems("down");
+          break;
+        case "ArrowUp":
+          e.preventDefault();
+          navigateItems("up");
+          break;
+        case "Escape":
+          e.preventDefault();
+          close();
+          btn.focus();
+          break;
+        case "Tab":
+          // Laisser le comportement par défaut pour sortir du dropdown
+          close();
+          break;
+      }
     });
+
+    // Events souris (existants)
+    item.addEventListener("click", () => selectItem(item));
   });
 
   // Valeur initiale → déclenche un 1er tri

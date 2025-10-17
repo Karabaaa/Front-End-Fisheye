@@ -391,8 +391,13 @@ form input {
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
-  outline: none;
   font: inherit;            
+}
+
+.contact_button:focus, .contact_button:hover {
+  background-color: #DB8876;
+  border: 1px solid black;
+  color:black;
 }
 
 .dropdown__btn::after{
@@ -439,6 +444,16 @@ form input {
   outline: none;
   padding: 0;            
   font: inherit;            
+}
+
+.dropdown__item:focus {
+  outline: 2px solid #FFD15A;
+  outline-offset: 1px;
+  background: rgba(255, 209, 90, 0.1);
+}
+
+.dropdown__item:hover {
+  background: rgba(255, 209, 90, 0.1);
 }
 
 .dropdown__sep {

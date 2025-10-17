@@ -42,6 +42,7 @@
           </button>
           <div
             class="dropdown__menu"
+            id="sort-menu"
             role="listbox"
             aria-label="Trier les médias du photographe"
           >
@@ -50,6 +51,7 @@
               role="option"
               data-value="popularity"
               aria-selected="true"
+              tabindex="-1"
             >
               Popularité
             </button>
@@ -58,7 +60,8 @@
               class="dropdown__item"
               role="option"
               data-value="date"
-              aria-selected="true"
+              aria-selected="false"
+              tabindex="-1"
             >
               Date
             </button>
@@ -67,7 +70,8 @@
               class="dropdown__item"
               role="option"
               data-value="title"
-              aria-selected="true"
+              aria-selected="false"
+              tabindex="-1"
             >
               Titre
             </button>
