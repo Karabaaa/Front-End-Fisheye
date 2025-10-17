@@ -116,7 +116,18 @@
 }
 
 .modal #message {
-    height:170px;
+    height: 170px;
+    font-size: 22px;
+    font-family: inherit;
+    background-color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+    resize: vertical;
+    vertical-align: top;
+    text-align: left;
+    word-wrap: break-word;
+    box-sizing: border-box;
 }
 
 form {
@@ -129,6 +140,7 @@ form {
 form label {
     color: #312E2E;
     font-size: 36px;
+    margin-bottom: 4px;
 }
 
 form div {
@@ -139,11 +151,20 @@ form div {
     margin-bottom: 26px;
 }
 
-form input {
+form input,
+form textarea {
     width: 100%;
-    height: 68px;
     border: none;
     border-radius: 5px;
+    font-size: 22px;
+    font-family: inherit;
+    background-color: white;
+    box-sizing: border-box;
+}
+
+form input {
+    height: 68px;
+    padding: 0 15px;
 }
 
 .photograph-header {
@@ -214,6 +235,17 @@ form input {
     border-radius: 5px;
 }
 
+.photograph-media .media-link {
+    display: block;
+    width: 350px;
+    height: 300px;
+    border-radius: 5px;
+}
+
+.photograph-media .media-link:focus-visible {
+    outline: auto;
+}
+
 .photograph-media .media-content {
     display:flex;
     flex-direction: row;
@@ -227,6 +259,11 @@ form input {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  border-radius: 3px; 
+}
+
+.photograph-media .heart-button:focus-visible {
+  outline:auto;
 }
 
 .photograph-media .heart {

@@ -6,6 +6,15 @@ function displayModal() {
   const modal = document.getElementById("contact_modal");
   modal.style.display = "flex";
   modal.setAttribute("aria-hidden", "false");
+
+  // Petit délai pour s'assurer que l'affichage est terminé avant de donner le focus
+  setTimeout(() => {
+    const firstInput = document.getElementById("first");
+    if (firstInput) {
+      firstInput.focus();
+    }
+  }, 10);
+
   document.addEventListener("keydown", onModalKeyDown);
   const form = document.getElementById("contact-form");
   if (form) form.addEventListener("keydown", onValidateFormEnterKey);

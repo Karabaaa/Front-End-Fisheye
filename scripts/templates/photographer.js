@@ -97,6 +97,7 @@ function mediaTemplate(media, folder) {
   const link = document.createElement("a");
   link.href = picture;
   link.className = "media-link";
+  link.tabIndex = 0;
   link.setAttribute(
     "aria-label",
     `${title || (isImage ? "Image" : "Vidéo")}, closeup view`
@@ -123,7 +124,6 @@ function mediaTemplate(media, folder) {
   link.appendChild(mediaElement);
 
   mediaElement.classList.add("media");
-  mediaElement.tabIndex = 0;
 
   // Ouverture de la lightbox au clic sur le média
   link.addEventListener("click", (e) => {
