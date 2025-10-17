@@ -1,8 +1,12 @@
+// TEMPLATES - FISHEYE : Génération des éléments DOM pour les photographes et médias
+
+// Génère le template d'une carte photographe pour la page d'accueil
 function photographerTemplate(data) {
   const { name, city, country, tagline, price, portrait, id } = data;
 
   const picture = `./assets/photos/photographers/${portrait}`;
 
+  // Crée le DOM de la carte photographe avec lien vers sa page
   function getUserCardDOM() {
     const article = document.createElement("article");
     const img = document.createElement("img");
@@ -28,6 +32,7 @@ function photographerTemplate(data) {
   return { name, city, country, tagline, price, portrait, id, getUserCardDOM };
 }
 
+// Génère le template de l'en-tête de la page photographe
 function photographHeader(data) {
   const { name, city, country, tagline, price, portrait, id } = data;
   const modalTitles = document.querySelector(".titles");
@@ -38,6 +43,7 @@ function photographHeader(data) {
 
   const picture = `./assets/photos/photographers/${portrait}`;
 
+  // Crée le DOM de l'en-tête avec informations du photographe
   function getHeaderDOM() {
     const photographHeader = document.querySelector(".photograph-header");
     const button = document.querySelector("main .contact_button");
@@ -63,15 +69,20 @@ function photographHeader(data) {
   return { name, city, country, tagline, price, portrait, id, getHeaderDOM };
 }
 
+// Génère le template d'une carte média (image/vidéo) avec système de likes
 function mediaTemplate(media, folder) {
   const { id, title, image, video, likes } = media;
 
   const picture = `./assets/photos/${folder}/${image ?? video}`;
   const mediaKey = `likes:${id}`;
   const isImage = !!image;
+
+  // Charge l'état des likes depuis localStorage
   const loadLikeState = (key) => {
     return JSON.parse(localStorage.getItem(key)) || null;
   };
+
+  // Sauvegarde l'état des likes dans localStorage
   const saveLikeState = (key, data) => {
     localStorage.setItem(key, JSON.stringify(data));
   };
@@ -91,6 +102,7 @@ function mediaTemplate(media, folder) {
     `${title || (isImage ? "Image" : "Vidéo")}, closeup view`
   );
 
+  // media Factory
   let mediaElement;
 
   if (image) {
@@ -112,6 +124,8 @@ function mediaTemplate(media, folder) {
 
   mediaElement.classList.add("media");
   mediaElement.tabIndex = 0;
+
+  // Ouverture de la lightbox au clic sur le média
   link.addEventListener("click", (e) => {
     e.preventDefault();
     const card = e.currentTarget.closest(".photograph-media");
@@ -119,6 +133,7 @@ function mediaTemplate(media, folder) {
     openLightboxAt(index);
   });
 
+  // Accessibilité clavier : Espace pour ouvrir la lightbox
   link.addEventListener("keydown", (e) => {
     if (e.code === "Space" || e.key === " ") {
       e.preventDefault();
@@ -152,6 +167,8 @@ function mediaTemplate(media, folder) {
   heart.alt = "likes";
   heart.classList.add("heart");
   heartButton.appendChild(heart);
+
+  // Gestion du système de likes avec sauvegarde localStorage
   heartButton.addEventListener("click", (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -159,6 +176,7 @@ function mediaTemplate(media, folder) {
     likeCount += liked ? 1 : -1;
     like.textContent = String(likeCount);
     saveLikeState(mediaKey, { liked, count: likeCount });
+    // Événement personnalisé pour mettre à jour le compteur global
     document.dispatchEvent(
       new CustomEvent("likechange", {
         detail: { mediaId: id },
@@ -172,6 +190,7 @@ function mediaTemplate(media, folder) {
   return wrapper;
 }
 
+// Associe un ID de photographe à son dossier d'images
 function getFolderName(photographerId) {
   switch (photographerId) {
     case 243:

@@ -446,16 +446,6 @@ form input {
   font: inherit;            
 }
 
-.dropdown__item:focus {
-  outline: 2px solid #FFD15A;
-  outline-offset: 1px;
-  background: rgba(255, 209, 90, 0.1);
-}
-
-.dropdown__item:hover {
-  background: rgba(255, 209, 90, 0.1);
-}
-
 .dropdown__sep {
   height: 2px;
   background: white;

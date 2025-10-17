@@ -1,10 +1,10 @@
-//Mettre le code JavaScript lié à la page photographer.html
+// PAGE PHOTOGRAPHE - FISHEYE : Gestion de l'affichage d'un photographe spécifique et de ses médias
 
+// Récupère les données du photographe et ses médias selon l'ID dans l'URL
 async function fetchData() {
   const params = new URLSearchParams(window.location.search);
   const idParam = params.get("id");
   const photographerId = Number(idParam);
-  //console.log(params, idParam, photographerId);
 
   const res = await fetch("./data/photographers.json");
   const data = await res.json();
@@ -14,6 +14,7 @@ async function fetchData() {
   return { photographer, medias };
 }
 
+// Affiche les données du photographe : header, galerie triée et badge de prix/likes
 async function displayData(data) {
   const { photographer, medias } = data;
   const header = photographHeader(photographer);
@@ -54,6 +55,7 @@ async function displayData(data) {
   render();
 }
 
+// Calcule le total des likes de tous les médias (incluant ceux sauvés en localStorage)
 function computeTotalLikes(medias) {
   return medias.reduce((sum, m) => {
     const saved = JSON.parse(localStorage.getItem(`likes:${m.id}`) || "null");
@@ -62,6 +64,7 @@ function computeTotalLikes(medias) {
   }, 0);
 }
 
+// Crée le badge fixe affichant les likes totaux et le prix du photographe
 function createInfoBadge(price, initialLikes) {
   const badge = document.createElement("div");
   badge.className = "info-badge";
@@ -94,6 +97,7 @@ function createInfoBadge(price, initialLikes) {
   };
 }
 
+// Compare deux médias par titre pour le tri alphabétique
 function computeTitle(a, b) {
   const ta = (a.title || "").toLocaleLowerCase();
   const tb = (b.title || "").toLocaleLowerCase();
@@ -102,11 +106,13 @@ function computeTitle(a, b) {
   return 0;
 }
 
+// Récupère le nombre de likes actuel d'un média (localStorage prioritaire sur défaut)
 function currentLikes(media) {
   const saved = JSON.parse(localStorage.getItem(`likes:${media.id}`) || "null");
   return saved?.count ?? Number(media.likes || 0);
 }
 
+// Trie les médias selon le critère choisi : popularité, date ou titre
 function sortMedias(medias, criterion) {
   const list = [...medias];
   switch (criterion) {
@@ -121,6 +127,7 @@ function sortMedias(medias, criterion) {
   }
 }
 
+// Initialise la page photographe : récupère et affiche les données
 async function init() {
   const data = await fetchData();
   displayData(data);
@@ -129,6 +136,8 @@ async function init() {
 init();
 setupCustomSortDropdown();
 
+// Configure la navigation clavier et souris du dropdown de tri
+// Gère l'accessibilité complète avec attributs ARIA et navigation aux flèches
 function setupCustomSortDropdown() {
   const dropdown = document.querySelector(".dropdown");
   if (!dropdown) return;

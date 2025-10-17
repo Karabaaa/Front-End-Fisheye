@@ -1,5 +1,7 @@
+// LIGHTBOX - FISHEYE : Gestion de l'affichage des médias en plein écran avec navigation
 let lightboxOpen = false;
 
+// Ouvre la lightbox et active la navigation clavier
 function displayLightbox() {
   const lightbox = document.getElementById("lightbox");
   lightbox.style.display = "flex";
@@ -8,6 +10,7 @@ function displayLightbox() {
   lightboxOpen = true;
 }
 
+// Ferme la lightbox et désactive les événements clavier
 function closeLightbox() {
   const lightbox = document.getElementById("lightbox");
   lightbox.style.display = "none";
@@ -16,6 +19,7 @@ function closeLightbox() {
   lightboxOpen = false;
 }
 
+// Gère la navigation clavier dans la lightbox
 function onLightboxKeyDown(e) {
   if (!lightboxOpen) return;
   switch (e.key) {
@@ -37,6 +41,7 @@ function onLightboxKeyDown(e) {
 let gallery = [];
 let currentIndex = 0;
 
+// Construit le tableau de médias pour la lightbox
 function buildGallery(medias, folder) {
   gallery = medias.map((m) => {
     const isImage = !!m.image;
@@ -51,6 +56,7 @@ function buildGallery(medias, folder) {
   });
 }
 
+// Ouvre la lightbox sur un média spécifique
 function openLightboxAt(index) {
   if (!gallery.length) return;
   currentIndex = ((index % gallery.length) + gallery.length) % gallery.length;
@@ -58,6 +64,7 @@ function openLightboxAt(index) {
   renderLightbox();
 }
 
+// Navigue vers le média précédent avec pause automatique des vidéos
 function previous() {
   if (!gallery.length) return;
   pauseVideoIfAny();
@@ -65,6 +72,7 @@ function previous() {
   renderLightbox();
 }
 
+// Navigue vers le média suivant avec pause automatique des vidéos
 function next() {
   if (!gallery.length) return;
   pauseVideoIfAny();
@@ -72,6 +80,7 @@ function next() {
   renderLightbox();
 }
 
+// Met en pause les vidéos en cours de lecture lors du changement de média
 function pauseVideoIfAny() {
   const video = document.querySelector("#lightbox .picture video");
   if (video && !video.paused) {
@@ -79,6 +88,7 @@ function pauseVideoIfAny() {
   }
 }
 
+// Affiche le média actuel dans la lightbox (image ou vidéo) avec titre
 function renderLightbox() {
   const container = document.querySelector("#lightbox .picture");
 

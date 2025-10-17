@@ -1,5 +1,7 @@
+// FORMULAIRE DE CONTACT - FISHEYE : Gestion de la modale de contact avec navigation clavier
 let modalOpen = false;
 
+// Ouvre la modale de contact et configure les événements clavier
 function displayModal() {
   const modal = document.getElementById("contact_modal");
   modal.style.display = "flex";
@@ -10,6 +12,7 @@ function displayModal() {
   modalOpen = true;
 }
 
+// Ferme la modale et remet le focus sur le bouton d'ouverture
 function closeModal() {
   const modal = document.getElementById("contact_modal");
   const opener = document.getElementById("open-contact") || document.body;
@@ -22,6 +25,7 @@ function closeModal() {
   modalOpen = false;
 }
 
+// Gère la fermeture de la modale avec la touche Échap
 function onModalKeyDown(e) {
   if (!modalOpen) return;
   if (e.key === "Escape") {
@@ -30,6 +34,7 @@ function onModalKeyDown(e) {
   }
 }
 
+// Permet la validation du formulaire avec la touche Entrée
 function onValidateFormEnterKey(e) {
   if (e.key !== "Enter" || e.shiftKey) return;
   e.preventDefault();
@@ -37,6 +42,7 @@ function onValidateFormEnterKey(e) {
   if (form) form.requestSubmit();
 }
 
+// Traite la soumission du formulaire : validation et affichage en console
 function submitForm(event) {
   event.preventDefault();
 
