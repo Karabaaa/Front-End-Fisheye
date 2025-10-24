@@ -206,65 +206,69 @@ function setupCustomSortDropdown() {
     if (!dropdown.contains(e.target)) close();
   });
 
-  // Events clavier sur le bouton
-  btn.addEventListener("keydown", (e) => {
+  // Fonctions utilitaires pour les actions du dropdown
+  const toggleDropdown = () => {
+    const isOpen = dropdown.classList.contains("is-open");
+    isOpen ? close() : open();
+  };
+
+  const handleArrowNavigation = (direction, isButton) => {
+    if (isButton && !dropdown.classList.contains("is-open")) {
+      open();
+    } else {
+      navigateItems(direction);
+    }
+  };
+
+  const handleEscape = (isButton) => {
+    close();
+    if (!isButton) {
+      btn.focus();
+    }
+  };
+
+  // Gestionnaire d'événements clavier commun
+  const handleKeydown = (e, isButton = false, item = null) => {
     switch (e.key) {
       case "Enter":
       case " ": // Espace
         e.preventDefault();
-        const isOpen = dropdown.classList.contains("is-open");
-        isOpen ? close() : open();
+        isButton ? toggleDropdown() : selectItem(item);
         break;
+
       case "ArrowDown":
         e.preventDefault();
-        if (!dropdown.classList.contains("is-open")) {
-          open();
-        } else {
-          navigateItems("down");
-        }
+        handleArrowNavigation("down", isButton);
         break;
+
       case "ArrowUp":
         e.preventDefault();
-        if (!dropdown.classList.contains("is-open")) {
-          open();
-        } else {
-          navigateItems("up");
-        }
+        handleArrowNavigation("up", isButton);
         break;
+
       case "Escape":
         e.preventDefault();
-        close();
+        handleEscape(isButton);
+        break;
+
+      case "Tab":
+        if (!isButton) {
+          // Seulement pour les items : fermer et laisser Tab fonctionner
+          close();
+        }
         break;
     }
+  };
+
+  // Events clavier sur le bouton
+  btn.addEventListener("keydown", (e) => {
+    handleKeydown(e, true);
   });
 
   // Events clavier sur les options
   items.forEach((item, index) => {
     item.addEventListener("keydown", (e) => {
-      switch (e.key) {
-        case "Enter":
-        case " ": // Espace
-          e.preventDefault();
-          selectItem(item);
-          break;
-        case "ArrowDown":
-          e.preventDefault();
-          navigateItems("down");
-          break;
-        case "ArrowUp":
-          e.preventDefault();
-          navigateItems("up");
-          break;
-        case "Escape":
-          e.preventDefault();
-          close();
-          btn.focus();
-          break;
-        case "Tab":
-          // Laisser le comportement par défaut pour sortir du dropdown
-          close();
-          break;
-      }
+      handleKeydown(e, false, item);
     });
 
     // Events souris (existants)
